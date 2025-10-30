@@ -1,23 +1,23 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Navbar } from "./components/navbar";
-import { Usuarios } from "./paginas/Usuarios";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./componentes/navbar";
+import Post from "./paginas/post";
+import { Usuario } from "./paginas/Usuarios";
+import { Productos } from "./paginas/productos";
+import { Inicio } from "./paginas/inicio";
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-pink-50">
+    <>
         <Navbar />
 
-        <main className="max-w-6xl mx-auto py-6 px-4">
-          <Routes>
-            <Route path="/" element={<Inicio />} />
-            <Route path="/usuarios" element={<Usuarios />} />
-            <Route path="/post" element={<Post />} />
-            <Route path="/productos" element={<Productos />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+      <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/usuarios" element={<Usuario />} />
+        <Route path="/post" element={<Post />} />
+        <Route path="/productos" element={<Productos />} />
+      </Routes>
+    </>
+      
   );
 }
 

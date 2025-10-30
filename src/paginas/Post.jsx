@@ -1,8 +1,16 @@
 import { useState, useEffect } from "react";
-import { db } from './lib/firebase.js';
-import { collection, onSnapshot, query, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { db } from "../lib/firebase.js";
+import {
+  collection,
+  onSnapshot,
+  query,
+  addDoc,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 
-function Post() {
+export default function Post() {
   const [post, setPost] = useState([]);
   const [texto, setTexto] = useState("");
   const [autor, setAutor] = useState("");
@@ -12,16 +20,15 @@ function Post() {
   useEffect(() => {
     const consulta = query(collection(db, "post"));
     const unsubscribe = onSnapshot(consulta, (snapshot) => {
-      const docs = snapshot.docs.map(doc => ({
+      const docs = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
       setPost(docs);
     });
     return () => unsubscribe();
   }, []);
 
-  // Abrir modal para agregar autor al nuevo post
   const abrirModal = () => {
     if (texto.trim() === "") {
       setError("⚠️ Por favor escribe un mensaje antes de enviarlo.");
@@ -31,84 +38,82 @@ function Post() {
     setShowModal(true);
   };
 
-  // Guardar nuevo post con fecha y hora
   const guardarPost = async () => {
     const fecha = new Date();
     await addDoc(collection(db, "post"), {
       mensaje: texto,
       autor: autor.trim() || "Anónimo 🌸",
-      createdAt: fecha, // 🕒 Nuevo: guardamos la fecha completa
+      createdAt: fecha,
     });
     setTexto("");
     setAutor("");
     setShowModal(false);
   };
 
-  // Eliminar post
   const eliminarPost = async (id) => {
     await deleteDoc(doc(db, "post", id));
   };
 
-  // Guardar cambios en edición inline
   const guardarEdicion = async (id, nuevoTexto) => {
     await updateDoc(doc(db, "post", id), { mensaje: nuevoTexto });
   };
 
-  // Componente principal
   return (
-    <div className="min-h-screen bg-linear-to-br from-pink-100 via-purple-100 to-blue-100 flex flex-col items-center py-10 px-4">
-      <h1 className="text-4xl font-bold text-purple-700 mb-6 drop-shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-pink-50 to-purple-100 flex flex-col items-center py-10 px-4">
+      <h1 className="text-4xl font-bold text-pink-600 mb-6 tracking-tight drop-shadow-sm">
         🌷 Lista de Posts 🌷
       </h1>
 
-      {/* Input para escribir nuevo post */}
-      <div className="flex flex-col items-center gap-3 mb-8 bg-white p-4 rounded-2xl shadow-md border border-purple-200">
+      {/* Input para nuevo post */}
+      <div className="flex flex-col items-center gap-3 mb-10 bg-white/70 backdrop-blur-md p-5 rounded-2xl shadow-md border border-pink-200">
         <div className="flex items-center gap-3">
           <input
-            className="border border-purple-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-purple-300 focus:outline-none w-64"
+            className="border border-pink-300 rounded-full px-4 py-2 focus:ring-2 focus:ring-pink-300 focus:outline-none w-72 text-pink-700 placeholder-pink-300"
             type="text"
-            placeholder="Escribe un nuevo post 💭"
+            placeholder="💭 Escribe algo bonito..."
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && abrirModal()}
           />
           <button
-            className="bg-linear-to-r from-pink-400 to-purple-400 text-white px-4 py-2 rounded-xl shadow-md hover:scale-105 transform transition duration-300"
+            className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-4 py-2 rounded-full shadow-sm hover:scale-105 hover:shadow-md transition-all duration-300"
             onClick={abrirModal}
           >
-            Guardar 💌
+            💌 Publicar
           </button>
         </div>
 
         {error && (
-          <div className="text-red-500 text-sm font-medium mt-2 bg-red-50 border border-red-200 px-3 py-1 rounded-xl">
+          <div className="text-red-500 text-sm font-medium mt-2 bg-red-50 border border-red-200 px-3 py-1 rounded-full">
             {error}
           </div>
         )}
       </div>
 
-      {/* Modal para autor */}
+      {/* Modal autor */}
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-6 w-80 text-center border border-purple-200">
-            <h2 className="text-xl font-semibold text-purple-700 mb-4">💁 Agregar autor</h2>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+          <div className="bg-white rounded-2xl shadow-lg p-6 w-80 text-center border border-pink-200">
+            <h2 className="text-xl font-semibold text-pink-600 mb-4">
+              💁 Agrega tu nombre
+            </h2>
             <input
               type="text"
-              className="border border-purple-300 rounded-xl px-3 py-2 w-full mb-4 focus:ring-2 focus:ring-purple-300 focus:outline-none"
-              placeholder="Escribe tu nombre o déjalo vacío 🌸"
+              className="border border-pink-300 rounded-full px-3 py-2 w-full mb-4 focus:ring-2 focus:ring-pink-300 focus:outline-none text-pink-700"
+              placeholder="🌸 Escribe tu nombre (opcional)"
               value={autor}
               onChange={(e) => setAutor(e.target.value)}
             />
             <div className="flex justify-center gap-3">
               <button
                 onClick={guardarPost}
-                className="bg-linear-to-r from-pink-400 to-purple-400 text-white px-4 py-2 rounded-xl shadow-md hover:scale-105 transition duration-300"
+                className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-4 py-2 rounded-full shadow-sm hover:scale-105 transition-all duration-300"
               >
-                Guardar
+                Guardar 💕
               </button>
               <button
                 onClick={() => setShowModal(false)}
-                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-400 transition duration-300"
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-300 transition-all duration-300"
               >
                 Cancelar
               </button>
@@ -120,14 +125,18 @@ function Post() {
       {/* Lista de posts */}
       <ul className="w-full max-w-md space-y-4">
         {post.map((doc) => (
-          <EditablePost key={doc.id} doc={doc} onDelete={eliminarPost} onSave={guardarEdicion} />
+          <EditablePost
+            key={doc.id}
+            doc={doc}
+            onDelete={eliminarPost}
+            onSave={guardarEdicion}
+          />
         ))}
       </ul>
     </div>
   );
 }
 
-// ✅ Componente para edición inline
 function EditablePost({ doc, onDelete, onSave }) {
   const [isEditing, setIsEditing] = useState(false);
   const [nuevoTexto, setNuevoTexto] = useState(doc.mensaje);
@@ -138,7 +147,6 @@ function EditablePost({ doc, onDelete, onSave }) {
     setIsEditing(false);
   };
 
-  // 🕒 Nuevo: convertir timestamp a texto legible
   const fecha = doc.createdAt?.toDate
     ? doc.createdAt.toDate()
     : new Date(doc.createdAt);
@@ -148,11 +156,11 @@ function EditablePost({ doc, onDelete, onSave }) {
   });
 
   return (
-    <li className="bg-white border border-purple-200 rounded-2xl p-4 shadow-sm hover:shadow-lg transition duration-300 flex justify-between items-center">
+    <li className="bg-white/80 backdrop-blur-sm border border-pink-200 rounded-2xl p-4 shadow-sm hover:shadow-lg hover:scale-[1.01] transition-all duration-300 flex justify-between items-center">
       <div className="flex-1 mr-3">
         {isEditing ? (
           <input
-            className="border border-purple-300 rounded-xl px-2 py-1 w-full focus:ring-2 focus:ring-purple-300 focus:outline-none"
+            className="border border-pink-300 rounded-full px-3 py-1 w-full focus:ring-2 focus:ring-pink-300 focus:outline-none text-pink-700"
             value={nuevoTexto}
             onChange={(e) => setNuevoTexto(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSave()}
@@ -160,9 +168,13 @@ function EditablePost({ doc, onDelete, onSave }) {
           />
         ) : (
           <>
-            <h2 className="text-lg font-semibold text-purple-700 mb-1">{doc.mensaje}</h2>
-            <p className="text-sm text-gray-500 italic">{doc.autor || "Anónimo 🌸"}</p>
-            <p className="text-xs text-gray-400 mt-1">🕒 {fechaFormateada}</p> {/* 🕒 Nuevo */}
+            <h2 className="text-lg font-semibold text-pink-700 mb-1">
+              {doc.mensaje}
+            </h2>
+            <p className="text-sm text-pink-500 italic">
+              {doc.autor || "Anónimo 🌸"}
+            </p>
+            <p className="text-xs text-pink-300 mt-1">🕒 {fechaFormateada}</p>
           </>
         )}
       </div>
@@ -172,7 +184,7 @@ function EditablePost({ doc, onDelete, onSave }) {
           <>
             <button
               onClick={handleSave}
-              className="bg-green-400 hover:bg-green-500 text-white px-3 py-1 rounded-xl shadow-md transition duration-300"
+              className="bg-green-400 hover:bg-green-500 text-white px-3 py-1 rounded-full shadow-sm transition-all duration-300"
             >
               💾
             </button>
@@ -181,7 +193,7 @@ function EditablePost({ doc, onDelete, onSave }) {
                 setNuevoTexto(doc.mensaje);
                 setIsEditing(false);
               }}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-1 rounded-xl transition duration-300"
+              className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-1 rounded-full transition-all duration-300"
             >
               ❌
             </button>
@@ -190,13 +202,13 @@ function EditablePost({ doc, onDelete, onSave }) {
           <>
             <button
               onClick={() => setIsEditing(true)}
-              className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-xl shadow-md transition duration-300"
+              className="bg-yellow-300 hover:bg-yellow-400 text-white px-3 py-1 rounded-full shadow-sm transition-all duration-300"
             >
               ✏️
             </button>
             <button
               onClick={() => onDelete(doc.id)}
-              className="bg-red-400 hover:bg-red-500 text-white px-3 py-1 rounded-xl shadow-md transition duration-300"
+              className="bg-red-400 hover:bg-red-500 text-white px-3 py-1 rounded-full shadow-sm transition-all duration-300"
             >
               🗑️
             </button>
@@ -206,5 +218,3 @@ function EditablePost({ doc, onDelete, onSave }) {
     </li>
   );
 }
-
-export default Post;

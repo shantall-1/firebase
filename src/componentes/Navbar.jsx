@@ -7,7 +7,7 @@ export default function Navbar() {
     <nav className="bg-pink-100/70 backdrop-blur-md border-b border-pink-200 shadow-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-pink-600 tracking-tight hover:scale-105 transition-transform">
-          🌸 CuteApp
+          🌸
         </h1>
 
         <ul className="flex gap-6 text-pink-700 font-medium">
