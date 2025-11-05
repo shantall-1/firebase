@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
 import { db } from "../lib/firebase.js";
-import {
-  collection,
-  onSnapshot,
-  query,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import {collection,  onSnapshot,query,addDoc,deleteDoc, doc, updateDoc,} from "firebase/firestore";
 
 export default function Post() {
   const [post, setPost] = useState([]);
@@ -59,7 +51,7 @@ export default function Post() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-pink-50 to-purple-100 flex flex-col items-center py-10 px-4">
+    <div className="min-h-screen bg-linear-to-br from-pink-100 via-pink-50 to-purple-100 flex flex-col items-center py-10 px-4">
       <h1 className="text-4xl font-bold text-pink-600 mb-6 tracking-tight drop-shadow-sm">
         🌷 Lista de Posts 🌷
       </h1>
@@ -76,7 +68,7 @@ export default function Post() {
             onKeyDown={(e) => e.key === "Enter" && abrirModal()}
           />
           <button
-            className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-4 py-2 rounded-full shadow-sm hover:scale-105 hover:shadow-md transition-all duration-300"
+            className="bg-linear-to-r from-pink-400 to-pink-500 text-white px-4 py-2 rounded-full shadow-sm hover:scale-105 hover:shadow-md transition-all duration-300"
             onClick={abrirModal}
           >
             💌 Publicar
@@ -107,7 +99,7 @@ export default function Post() {
             <div className="flex justify-center gap-3">
               <button
                 onClick={guardarPost}
-                className="bg-gradient-to-r from-pink-400 to-pink-500 text-white px-4 py-2 rounded-full shadow-sm hover:scale-105 transition-all duration-300"
+                className="bg-linear-to-r from-pink-400 to-pink-500 text-white px-4 py-2 rounded-full shadow-sm hover:scale-105 transition-all duration-300"
               >
                 Guardar 💕
               </button>
