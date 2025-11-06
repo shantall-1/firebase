@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react"
 // ⚠️ Nota: Asegúrate de que este path y las exportaciones sean correctas en tu proyecto
 import { auth, googleProvider } from "../lib/firebase";
+import { db } from "../lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import {
   onAuthStateChanged,
   signOut,
@@ -43,8 +45,19 @@ export function AuthProvider({ children }) {
   // --- Funciones de ayuda (para usar en los componentes) ---
 
   // Registro con email/contraseña
-  const register = (email, password) =>
-    createUserWithEmailAndPassword(auth, email, password);
+
+const register = async (email, password) => {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+
+  await setDoc(doc(db, "registro", user.uid), {
+    uid: user.uid,
+    email: user.email,
+    creadoEn: new Date(),
+  });
+
+  return user;
+};
 
   // Login con email/contraseña
   const login = (email, password) =>
